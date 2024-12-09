@@ -1,0 +1,6 @@
+1) Creare database chiamato arrest
+2) Fare partire programma e vedere che parta senza problemi
+3) FARE TODO in quest'ordine
+    - Inmate
+    - InmateController (con quello che vi serve aggiungere in ControllerHelper e ControllerHelperImpl)
+    - index.html

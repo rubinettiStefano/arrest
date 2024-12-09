@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>Home arRest</title>
+
+
+    <script>
+        let detenuti = null;
+        function inizializzaLista()
+        {
+            $.get('/inmates',
+                function(data)
+                {
+                    detenuti = data;
+                    graficaDetenuti(detenuti);
+                }
+            )
+        }
+
+        function graficaDetenuti(detenuti)
+        {
+            let contenuto = `<h1>DETENUTI</h1>`;
+
+            //TODO  prendete come esempio html di venerdì
+            document.getElementById("listaDetenuti").innerHTML = contenuto;
+        }
+
+
+        function inviaForm(event)
+        {
+            event.preventDefault();//in automatico a questo metodo viene passato come parametro
+            //l'evento che ha causato la sua chiamata.
+            //con questa riga IMPEDISCO ad HTML di fare lui la request
+            let jsonForm = Object.fromEntries(new FormData(document.querySelector("#formDetenuto")).entries());
+            //trasforma la form in JSON
+            //es: form con 2 caselle input con name="targa" e name="modello"
+            //                              | ABC777DE  |       | peugion777 |
+            //
+            //  {
+            //      "targa"     :"ABC777DE",
+            //      "modello"   :"peugion777"
+            //
+            //  }
+            $.ajax({
+                url: "/inmates",
+                method: "POST",
+                contentType: "application/json", // Specifica che stai inviando JSON
+                data: JSON.stringify(jsonForm),  // Converte l'oggetto in una stringa JSON
+                success: function (data) {
+                    detenuti.push(data);
+                    graficaDetenuti(detenuti);
+                    alert("DETENUTO AGGIUNTO");
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <div class="w3-container w3-row">
+        <!-- lista con tutti i detenuti -->
+        <div id="listaDetenuti" class="w3-col m6 l6">
+
+        </div>
+
+        <div class="w3-col m6 l6">
+            <form id="formDetenuto" class="w3-container w3-card w3-padding" onsubmit="inviaForm(event)">
+                <input name="firstName" type="text" placeholder="Nome" />
+                <!-- TODO -->
+                <input type="submit" value="Salva"  />
+            </form>
+        </div>
+    </div>
+
+
+    <script>inizializzaLista()</script>
+</body>
+</html>
